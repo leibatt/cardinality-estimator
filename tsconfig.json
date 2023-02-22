@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "outDir": "build",
-    "target": "es6",
-    "module": "esnext",
+    "target": "es5",                          
+    "module": "commonjs",                    
+    "lib": ["es6"],  
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "allowJs": true,
@@ -12,12 +13,9 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "sourceMap": true,
-    "resolveJsonModule": true,
-    "typeRoots": [
-      "./node_modules/@types"
-    ]
+    "resolveJsonModule": true
   },
-  "files": ["src/index.ts"],
-  "include": ["src/**/*.ts", "test/**/*.ts"],
-  "exclude": ["build/**/*","node_modules"]
+  "files": ["src/index.ts", "src/sqlite.ts"],
+  "include": ["src/**/*.ts"],
+  "exclude": ["build/**/*", "test/**/*.ts","node_modules"]
 }
