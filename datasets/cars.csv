@@ -1,4 +1,4 @@
-acceleration,cylinders,displacement,horsepower,miles_per_Gallon,name,origin,weight_in_lbs,year
+acceleration,cylinders,displacement,horsepower,miles_per_gallon,name,origin,weight_in_lbs,year
 12,8,307,130,18,chevrolet chevelle malibu,USA,3504,1970-01-01
 11.5,8,350,165,15,buick skylark 320,USA,3693,1970-01-01
 11,8,318,150,18,plymouth satellite,USA,3436,1970-01-01
