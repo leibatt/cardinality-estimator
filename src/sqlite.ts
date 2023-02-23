@@ -21,6 +21,12 @@ db.serialize(() => {
 db.close();
 */
 
+const db = new Database('./TestDB.db');
+executeQuery(db,"select * from cars limit 10")
+.then(rows => {
+    rows.forEach(row => { console.log(row.acceleration); });
+});
+
 export function executeQuery(db: Database, query: string): Promise<Record<string, any>[]> {
   return new Promise((resolve, reject) => {
     db.all(query,{}, (err, rows) => {
