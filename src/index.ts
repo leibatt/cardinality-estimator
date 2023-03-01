@@ -1,4 +1,4 @@
-
+import { Database } from './data_setup';
 
 const quantitativeExtent = "SELECT MIN([field]) as minval, MAX([field]) as maxval FROM [table]";
 const totalCount = "SELECT COUNT(*) FROM [table]";
@@ -25,21 +25,21 @@ export class QuantitativeHistogram {
   extent: number[]; // min and max
   total: number; //  TODO: should this be table size? Or total non-null values for this field?
   field: Field; // column to compute histogram on
-  conn: string; // TODO: add type
+  database: Database; // TODO: add type
   config: Record<string, number>;
 
-  constructor(conn: string, field: Field, config: Record<string, number>) {
-    this.conn = conn;
+  constructor(database: Database, field: Field, config: Record<string, number>) {
+    this.database = database;
     this.field = field;
     this.config = config;
   }
 
-  build() {
+  async build() {
     // calculate extent
     let extentQuery: string = quantitativeExtent.replace("[table]", this.field.tableName);
     extentQuery = extentQuery.replace("[field]",this.field.name);
-    const extentResults: Record<string, any>[] = executeQuery(this.conn,extentQuery); // first row?
-    this.extent = [extentResults[0].minval, extentResults[0].maxval];
+    const extentResults: Record<string, string | number>[] = await this.database.executeQuery(extentQuery); // first row?
+    this.extent = [extentResults[0].minval as number, extentResults[0].maxval as number];
     
     // setup binning parameters
     if(this.config.bins === undefined) {
@@ -56,8 +56,8 @@ export class QuantitativeHistogram {
     qhquery = qhquery.replace("[table]",this.field.tableName)
       .replace("[min]",""+this.extent[0]);
 
-    const results: Record<string, any>[] = executeQuery(this.conn,qhquery);
-    this.histogram = results.map(r => r.count);
+    const results: Record<string, string | number>[] = await this.database.executeQuery(qhquery);
+    this.histogram = results.map(r => r.count as number);
     this.total = this.histogram.reduce((a,v) => a + v, 0);
   }
 
@@ -82,11 +82,5 @@ export class QuantitativeHistogram {
     const bin = Math.floor((1.0 * value - this.extent[0]) / this.config.step);
     return 1.0 * this.histogram[bin] / this.total;
   }
-}
-
-function executeQuery(conn: string, query: string): Record<string, any>[] {
-  //const results = conn.execute(query);
-  // TODO: fill in
-  return [];
 }
 
